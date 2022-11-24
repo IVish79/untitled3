@@ -37,15 +37,19 @@ class _nextpageState extends State<nextpage> {
         children: [
           Text("${widget.songs[widget.index].title}"),
           Slider(
-            value: current_time,
             onChanged: (value) async {
               await player.seek(Duration(milliseconds: value.toInt()));
             },
+            min: 0,
+            max: widget.songs[widget.index].duration!.toDouble(),
+            value: current_time,
           ),
-          Row(
+          Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               ElevatedButton(onPressed: () {
-                widget.index--;
+                setState(() {
+                  widget.index--;
+                });
               }, child: Text("<<")),
               ElevatedButton(onPressed: () async {
                 if(play)
@@ -57,9 +61,14 @@ class _nextpageState extends State<nextpage> {
                     String path=widget.songs[widget.index].data;
                     await player.play(DeviceFileSource(path));
                   }
+                setState(() {
+                  play=!play;
+                });
               }, child: play?Icon(Icons.pause):Icon(Icons.play_arrow)),
               ElevatedButton(onPressed: () {
-                widget.index++;
+                setState(() {
+                  widget.index++;
+                });
               }, child: Text(">>")),
             ],
           )
